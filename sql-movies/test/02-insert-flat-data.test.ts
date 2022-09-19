@@ -16,11 +16,13 @@ import {
   DIRECTORS,
   GENRES,
   PRODUCTION_COMPANIES,
-  MOVIES
+  MOVIES,
+  MOVIE_PRODUCTION_COMPANIES
 } from "../src/table-names";
 import { Movie } from "../src/data/types";
 import { escape } from "../src/utils";
 import { minutes } from "./utils";
+import { idText } from "typescript";
 
 const insertActors = (actors: string[]) => {
   return (
@@ -30,23 +32,50 @@ const insertActors = (actors: string[]) => {
 };
 
 const insertKeywords = (keywords: string[]) => {
-  throw new Error(`todo`);
+  return (
+    `insert into keywords (keyword) values` +
+    keywords.map(keyword => `('${escape(keyword)}')`).join(",")
+  );
 };
 
 const insertDirectors = (directors: string[]) => {
-  throw new Error(`todo`);
+  return (
+    `insert into directors (full_name) values` +
+    directors.map(director => `('${escape(director)}')`).join(",")
+  );
 };
 
 const insertGenres = (genres: string[]) => {
-  throw new Error(`todo`);
+  return (
+    `insert into genres (genre) values` +
+    genres.map(genre => `('${escape(genre)}')`).join(",")
+  );
 };
 
 const insertProductionCompanies = (companies: string[]) => {
-  throw new Error(`todo`);
+  return (
+    `insert into production_companies (company_name) values` +
+    companies.map(companies => `('${escape(companies)}')`).join(",")
+  );
 };
 
 const insertMovies = (movies: Movie[]) => {
-  throw new Error(`todo`);
+  return (
+    `INSERT INTO movies (imdb_id, popularity, budget, budget_adjusted, revenue, revenue_adjusted, original_title,
+      homepage, tagline, overview, runtime, release_date) values\n` +
+    movies.map(movie => `('${escape(movie.imdbId)}',
+    ${movie.popularity},
+    ${movie.budget},
+    ${movie.budgetAdjusted},
+    ${movie.revenue},
+    ${movie.revenueAdjusted},
+    '${escape(movie.originalTitle)}',
+    '${escape(movie.homepage)}',
+    '${movie.tagline == undefined ? undefined : escape(movie.tagline)}',
+    '${escape(movie.overview)}',
+    ${movie.runtime},
+    '${escape(movie.releaseDate)}')`).join(",")
+  );
 };
 
 describe("Insert Flat Data", () => {
